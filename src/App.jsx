@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./styles.css";
+import React, { useEffect, useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+/* Instruction
+ Create a custom hook to track the dimensions of users window while resizing.*/
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+function useWindowDimensions() {
+  const element = document.getElementById("root")
+  const[width, setWidth] = useState(0)
+  const[height, setHeight] = useState(0)
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.outerWidth)
+      setHeight(window.outerHeight)
+      
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+
+
+  
+  return {
+    width: width,
+    height: height
+  };
 }
 
-export default App
+export default function App() {
+  const { width, height } = useWindowDimensions();
+
+  return (
+    <div className="App">
+      <h2>width: {width + "px"}</h2>
+      <h2>height: {height + "px"}</h2>
+      <p>Resize the window to see dynamic width and height</p>
+    </div>
+  );
+}
